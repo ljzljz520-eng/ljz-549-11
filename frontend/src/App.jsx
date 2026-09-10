@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { ajaxRequest } from './utils/ajax';
 import Toast from './components/Toast';
 import CodeBlock from './components/CodeBlock';
+import LostFoundDesk from './components/LostFoundDesk';
 import { JAVA_SOURCE_CODE } from './constants/sourceCode';
-import { AlignLeft, Code, Database, Globe, Play, Server, Plus, Trash2, Clock, Settings, Zap } from 'lucide-react';
+import { AlignLeft, Code, Database, Globe, Play, Server, Plus, Trash2, Clock, Settings, PackageSearch } from 'lucide-react';
 
 function App() {
+    const [view, setView] = useState('lostfound'); // lostfound | playground
     const [loading, setLoading] = useState(false);
     const [responseContext, setResponseContext] = useState(null); // { data, status, headers }
     const [activeTab, setActiveTab] = useState('response'); // response, frontend, backend
@@ -177,14 +179,37 @@ fetch(url, options)
             <Toast message={toast.message} type={toast.type} onClose={clearToast} />
 
             {/* Header */}
-            <header className="flex items-center gap-3 pb-4 border-b border-slate-800 mb-4 px-2">
+            <header className="flex items-center gap-3 pb-4 border-b border-slate-800 mb-4 px-2 flex-wrap">
                 <Server className="text-blue-500 w-8 h-8" />
-                <div>
+                <div className="mr-auto">
                     <h1 className="text-xl font-bold text-white tracking-tight">Ajax & Servlet 异步通信演练场</h1>
                     <p className="text-xs text-slate-400">交互式 HTTP 请求构建与代码可视化工具</p>
                 </div>
+
+                {/* 视图切换 */}
+                <nav className="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg p-1">
+                    <button
+                        onClick={() => setView('lostfound')}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-1.5 transition ${view === 'lostfound' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                    >
+                        <PackageSearch className="w-4 h-4" /> 校园失物服务台
+                    </button>
+                    <button
+                        onClick={() => setView('playground')}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-1.5 transition ${view === 'playground' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                    >
+                        <Globe className="w-4 h-4" /> 请求演练场
+                    </button>
+                </nav>
             </header>
 
+            {view === 'lostfound' ? (
+                <main className="flex-1 overflow-hidden">
+                    <section className="h-full max-w-3xl mx-auto bg-slate-900 rounded-xl border border-slate-800 shadow-2xl overflow-hidden">
+                        <LostFoundDesk />
+                    </section>
+                </main>
+            ) : (
             <main className="flex flex-1 gap-6 overflow-hidden">
 
                 {/* Left Panel: Request Builder */}
@@ -436,6 +461,7 @@ fetch(url, options)
                 </section>
 
             </main>
+            )}
         </div>
     );
 }
