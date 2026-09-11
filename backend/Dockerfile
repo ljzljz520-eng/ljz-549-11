@@ -1,5 +1,8 @@
 # Stage 1: Dependencies Cache
-FROM maven:3.9-eclipse-temurin-17-alpine AS deps
+# NOTE: use the Ubuntu (Jammy)-based image, not -alpine:
+# the alpine variant only provides linux/amd64 and fails on arm64
+# (Apple Silicon) with "no match for platform in manifest: not found"
+FROM maven:3.9-eclipse-temurin-17 AS deps
 WORKDIR /app
 # Correct path for settings.xml in this image
 COPY settings.xml /usr/share/maven/ref/settings.xml
